@@ -23,6 +23,8 @@ export default function FoodCard({ item }: FoodCardProps) {
           className="w-full object-cover aspect-[4/3] transition-transform duration-300 group-hover:scale-105"
           data-ai-hint={item.dataAiHint}
           onError={(e) => {
+            // Log the problematic path to the console to help with debugging
+            console.error(`Failed to load image for '${item.name}'. Tried to load: ${item.image}`);
             // Fallback to placeholder if the local image fails to load
             e.currentTarget.src = `https://picsum.photos/400/300?random=${item.id}`;
           }}
