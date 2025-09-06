@@ -19,15 +19,18 @@ export default function MenuPage() {
     const unsubscribe = onValue(menuRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const items: FoodItem[] = Object.values(data).map((item: any) => ({
-          id: item.menuId,
-          name: item.menuName,
-          price: parseFloat(item.menuPrice),
-          category: item.menuType === 'MainDish' ? 'Main Dish' : item.menuType,
-          image: item.menuImage || `https://picsum.photos/400/300?random=${item.menuId}`,
-          rating: 4.5, // Placeholder rating
-          dataAiHint: item.menuName.toLowerCase().split(' ').slice(0,2).join(' '),
-        }));
+        const items: FoodItem[] = Object.values(data).map((item: any) => {
+          const imageName = item.menuName.toLowerCase().replace(/\s+/g, '-') + '.jpg';
+          return {
+            id: item.menuId,
+            name: item.menuName,
+            price: parseFloat(item.menuPrice),
+            category: item.menuType === 'MainDish' ? 'Main Dish' : item.menuType,
+            image: item.menuImage || `/images/${imageName}`,
+            rating: 4.5, // Placeholder rating
+            dataAiHint: item.menuName.toLowerCase().split(' ').slice(0,2).join(' '),
+          };
+        });
         setFoodItems(items);
       }
       setLoading(false);

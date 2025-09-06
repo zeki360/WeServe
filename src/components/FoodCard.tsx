@@ -22,6 +22,10 @@ export default function FoodCard({ item }: FoodCardProps) {
           height={300}
           className="w-full object-cover aspect-[4/3] transition-transform duration-300 group-hover:scale-105"
           data-ai-hint={item.dataAiHint}
+          onError={(e) => {
+            // Fallback to placeholder if the local image fails to load
+            e.currentTarget.src = `https://picsum.photos/400/300?random=${item.id}`;
+          }}
         />
       </div>
       <CardContent className="p-4 space-y-2">
