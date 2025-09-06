@@ -16,7 +16,7 @@ export default function MenuPage() {
 
   useEffect(() => {
     const menuRef = ref(database, 'menu');
-    onValue(menuRef, (snapshot) => {
+    const unsubscribe = onValue(menuRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         const items: FoodItem[] = Object.values(data).map((item: any) => ({
@@ -31,11 +31,12 @@ export default function MenuPage() {
         setFoodItems(items);
       }
       setLoading(false);
+    }, (error) => {
+      console.error("Firebase read failed: " + error.message);
+      setLoading(false);
     });
 
-    return () => {
-      // Detach listener
-    }
+    return () => unsubscribe();
   }, []);
 
   if (loading) {
