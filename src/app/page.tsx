@@ -1,13 +1,51 @@
 "use client"
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { foodItems, type FoodItem } from "@/lib/data"
+import { type FoodItem } from "@/lib/data"
 import FoodCard from "@/components/FoodCard"
-import { Search } from "lucide-react"
+import { Search, Loader } from "lucide-react"
+import { database } from "@/lib/firebase";
+import { ref, onValue } from "firebase/database";
 
 const categories: FoodItem['category'][] = ['Breakfast', 'Main Dish', 'Drinks', 'Dessert'];
 
 export default function MenuPage() {
+  const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const menuRef = ref(database, 'menu');
+    onValue(menuRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const items: FoodItem[] = Object.values(data).map((item: any) => ({
+          id: item.menuId,
+          name: item.menuName,
+          price: parseFloat(item.menuPrice),
+          category: item.menuType === 'MainDish' ? 'Main Dish' : item.menuType,
+          image: item.menuImage || `https://picsum.photos/400/300?random=${item.menuId}`,
+          rating: 4.5, // Placeholder rating
+          dataAiHint: item.menuName.toLowerCase().split(' ').slice(0,2).join(' '),
+        }));
+        setFoodItems(items);
+      }
+      setLoading(false);
+    });
+
+    return () => {
+      // Detach listener
+    }
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader className="h-16 w-16 animate-spin" />
+      </div>
+    )
+  }
+
   return (
     <div className="p-4 md:p-6">
       <header className="mb-6">
