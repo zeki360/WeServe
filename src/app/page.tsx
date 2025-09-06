@@ -19,24 +19,29 @@ export default function MenuPage() {
     const unsubscribe = onValue(menuRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        const items: FoodItem[] = Object.values(data).map((item: any) => {
-          // Create a URL-friendly slug from the menu name.
-          // e.g., "Tibes Firfir" -> "tibes_firfir.jpg"
+        const allItems: FoodItem[] = Object.values(data).map((item: any) => {
           const imageName = item.menuName.toLowerCase().replace(/\s+/g, '_') + '.jpg';
           return {
             id: item.menuId,
             name: item.menuName,
             price: parseFloat(item.menuPrice),
             category: item.menuType === 'MainDish' ? 'Main Dish' : item.menuType,
-            // Use the database image if provided, otherwise generate the path
             image: item.menuImage || `/images/${imageName}`,
             rating: 4.5, // Placeholder rating
             dataAiHint: item.menuName.toLowerCase().split(' ').slice(0,2).join(' '),
           };
         });
-        setFoodItems(items);
+
+        // Filter out duplicate items by name
+        const uniqueItems = allItems.filter((item, index, self) =>
+          index === self.findIndex((t) => (
+            t.name === item.name
+          ))
+        );
+        
+        setFoodItems(uniqueItems);
       }
-      setLoading(false); // Ensure loading stops even if data is null
+      setLoading(false);
     }, (error) => {
       console.error("Firebase read failed: " + error.message);
       setLoading(false);
