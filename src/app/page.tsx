@@ -20,14 +20,15 @@ export default function MenuPage() {
       const data = snapshot.val();
       if (data) {
         const allItems: FoodItem[] = Object.values(data).map((item: any) => {
-          // Use the menuImage field directly if it exists, otherwise construct from name as a fallback
-          const imageName = item.menuImage || item.menuName.toLowerCase().replace(/\s+/g, '_') + '.jpg';
+          // Use the menuImage field directly for the image name.
+          // Fallback to a placeholder if menuImage is not provided.
+          const imageName = item.menuImage;
           return {
             id: item.menuId,
             name: item.menuName,
             price: parseFloat(item.menuPrice),
             category: item.menuType === 'MainDish' ? 'Main Dish' : item.menuType,
-            image: `/images/${imageName}`,
+            image: imageName ? `/images/${imageName}` : `https://picsum.photos/400/300?random=${item.menuId}`,
             rating: 4.5, // Placeholder rating
             dataAiHint: item.menuName.toLowerCase().split(' ').slice(0,2).join(' '),
           };
