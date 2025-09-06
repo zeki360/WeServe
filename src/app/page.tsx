@@ -20,7 +20,8 @@ export default function MenuPage() {
       const data = snapshot.val();
       if (data) {
         const allItems: FoodItem[] = Object.values(data).map((item: any) => {
-          const imageName = item.menuName.toLowerCase().replace(/\s+/g, '_') + '.jpg';
+          const extension = item.imageExtension || 'jpg';
+          const imageName = item.menuName.toLowerCase().replace(/\s+/g, '_') + `.${extension}`;
           return {
             id: item.menuId,
             name: item.menuName,
