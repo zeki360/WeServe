@@ -21,8 +21,8 @@ export default function MenuPage() {
       if (data) {
         const items: FoodItem[] = Object.values(data).map((item: any) => {
           // Create a URL-friendly slug from the menu name.
-          // e.g., "Tibes Firfir" -> "tibes-firfir.jpg"
-          const imageName = item.menuName.toLowerCase().replace(/\s+/g, '-') + '.jpg';
+          // e.g., "Tibes Firfir" -> "tibes_firfir.jpg"
+          const imageName = item.menuName.toLowerCase().replace(/\s+/g, '_') + '.jpg';
           return {
             id: item.menuId,
             name: item.menuName,
