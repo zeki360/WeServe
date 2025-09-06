@@ -20,20 +20,18 @@ export default function MenuPage() {
       const data = snapshot.val();
       if (data) {
         const allItems: FoodItem[] = Object.values(data).map((item: any) => {
-          // Use the menuImage field directly for the image name.
-          // Fallback to a placeholder if menuImage is not provided.
-          const imageName = item.menuImage;
+          const imageName = item.menuName.toLowerCase().replace(/\s+/g, '_') + '.jpg';
           return {
             id: item.menuId,
             name: item.menuName,
             price: parseFloat(item.menuPrice),
             category: item.menuType === 'MainDish' ? 'Main Dish' : item.menuType,
-            image: imageName ? `/images/${imageName}` : `https://picsum.photos/400/300?random=${item.menuId}`,
+            image: `/images/${imageName}`,
             rating: 4.5, // Placeholder rating
             dataAiHint: item.menuName.toLowerCase().split(' ').slice(0,2).join(' '),
           };
         });
-
+        
         // Filter out duplicate items by name
         const uniqueItems = allItems.filter((item, index, self) =>
           index === self.findIndex((t) => (
