@@ -30,9 +30,9 @@ export default function Navigation() {
           <Link
             href="/"
             className="hidden h-20 w-full items-center justify-center font-bold text-2xl text-primary md:flex"
-            aria-label="VenueVerse Home"
+            aria-label="WeServe Home"
           >
-            VV
+            WS
           </Link>
 
           <div className="flex flex-1 items-center justify-around md:flex-none md:flex-col md:gap-2">

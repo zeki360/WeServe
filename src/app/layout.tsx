@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Navigation from '@/components/Navigation';
 
 export const metadata: Metadata = {
-  title: 'VenueVerse',
+  title: 'WeServe',
   description: 'Your one-stop solution for food, lodging, and event spaces.',
 };
 
