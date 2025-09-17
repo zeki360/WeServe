@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BedDouble, ClipboardList, LayoutDashboard, User, Utensils } from "lucide-react"
+import { BedDouble, CalendarCheck, ClipboardList, LayoutDashboard, User, Utensils } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import {
@@ -15,6 +15,7 @@ import {
 const navItems = [
   { href: "/", label: "Menu", icon: Utensils },
   { href: "/rooms", label: "Rooms", icon: BedDouble },
+  { href: "/reservation", label: "Reservation", icon: CalendarCheck },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/orders", label: "Orders", icon: ClipboardList },
   { href: "/profile", label: "Profile", icon: User },
