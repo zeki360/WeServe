@@ -7,33 +7,33 @@ const reservationOptions = [
     title: "Main Hall",
     description: "Perfect for large events, conferences, and weddings. Accommodates up to 200 guests.",
     image: {
-      src: "https://picsum.photos/seed/main-hall/600/400",
+      src: "https://picsum.photos/seed/wedding-hall/600/400",
       width: 600,
       height: 400,
-      alt: "A large, elegant hall set up for a conference.",
-      "data-ai-hint": "conference hall"
+      alt: "A large, elegant hall set up for a wedding.",
+      "data-ai-hint": "banquet hall"
     }
   },
   {
     title: "Meeting Hall",
     description: "Ideal for corporate meetings, workshops, and presentations. Equipped with modern AV technology.",
     image: {
-      src: "https://picsum.photos/seed/meeting-hall/600/400",
+      src: "https://picsum.photos/seed/boardroom/600/400",
       width: 600,
       height: 400,
-      alt: "A modern meeting room with a large screen.",
-      "data-ai-hint": "meeting room"
+      alt: "A modern meeting room with a large screen and a long table.",
+      "data-ai-hint": "boardroom presentation"
     }
   },
   {
     title: "Training Center",
     description: "A flexible space designed for training sessions and educational seminars.",
     image: {
-      src: "https://picsum.photos/seed/training-center/600/400",
+      src: "https://picsum.photos/seed/seminar-room/600/400",
       width: 600,
       height: 400,
       alt: "A classroom-style setup for a training session.",
-      "data-ai-hint": "training center"
+      "data-ai-hint": "training classroom"
     }
   }
 ];
