@@ -24,7 +24,7 @@ import { Loader } from "lucide-react";
 type Order = {
   orderId: string;
   orderUserName: string;
-  orderMenu: {
+  orderMenu?: {
     menuName: string;
   };
   orderTime: string;
@@ -85,7 +85,7 @@ export default function ReceptionOrdersPage() {
               {orders.map((order) => (
                 <TableRow key={order.orderId}>
                   <TableCell className="font-medium">{order.orderUserName}</TableCell>
-                  <TableCell>{order.orderMenu.menuName}</TableCell>
+                  <TableCell>{order.orderMenu?.menuName || 'N/A'}</TableCell>
                   <TableCell>{order.orderTime}</TableCell>
                   <TableCell>
                     <Badge
