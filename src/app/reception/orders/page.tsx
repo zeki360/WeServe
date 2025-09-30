@@ -1,3 +1,8 @@
+
+"use client"
+import { useEffect, useState } from "react";
+import { database } from "@/lib/firebase";
+import { ref, onValue } from "firebase/database";
 import {
   Card,
   CardContent,
@@ -14,9 +19,49 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { foodOrders } from "@/lib/reception-data";
+import { Loader } from "lucide-react";
+
+type Order = {
+  orderId: string;
+  orderUserName: string;
+  orderMenu: {
+    menuName: string;
+  };
+  orderTime: string;
+  orderStatus: string;
+};
 
 export default function ReceptionOrdersPage() {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const ordersRef = ref(database, 'reception');
+    const unsubscribe = onValue(ordersRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const allOrders = Object.values(data) as Order[];
+        setOrders(allOrders);
+      } else {
+        setOrders([]);
+      }
+      setLoading(false);
+    }, (error) => {
+      console.error("Firebase read failed:", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader className="h-16 w-16 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 md:p-6">
       <Card>
@@ -37,22 +82,22 @@ export default function ReceptionOrdersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {foodOrders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="font-medium">{order.userName}</TableCell>
-                  <TableCell>{order.itemName}</TableCell>
-                  <TableCell>{order.time}</TableCell>
+              {orders.map((order) => (
+                <TableRow key={order.orderId}>
+                  <TableCell className="font-medium">{order.orderUserName}</TableCell>
+                  <TableCell>{order.orderMenu.menuName}</TableCell>
+                  <TableCell>{order.orderTime}</TableCell>
                   <TableCell>
                     <Badge
                       variant={
-                        order.status === "Pending"
+                        order.orderStatus === "sent"
                           ? "destructive"
-                          : order.status === "Confirmed"
+                          : order.orderStatus === "confirmed"
                           ? "secondary"
                           : "default"
                       }
                     >
-                      {order.status}
+                      {order.orderStatus}
                     </Badge>
                   </TableCell>
                 </TableRow>

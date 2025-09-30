@@ -37,6 +37,9 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 import type { FoodItem } from "@/lib/data";
+import { database } from "@/lib/firebase";
+import { ref, set } from "firebase/database";
+import { useAuth } from "@/context/AuthContext";
 
 const orderSchema = z.object({
   quantity: z.number().min(1, "Please select a quantity."),
@@ -58,12 +61,14 @@ interface FoodOrderDialogProps {
 
 export function FoodOrderDialog({ item, open, onOpenChange }: FoodOrderDialogProps) {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [quantity, setQuantity] = useState(1);
 
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
       quantity: 1,
+      deliveryDate: new Date(),
     },
   });
   
@@ -73,14 +78,77 @@ export function FoodOrderDialog({ item, open, onOpenChange }: FoodOrderDialogPro
     form.setValue("quantity", newQuantity);
   }
 
-  function onSubmit(data: OrderFormValues) {
-    toast({
-      title: "Order Submitted!",
-      description: `You've ordered ${data.quantity} plate(s) of ${item.name}.`,
-    });
-    onOpenChange(false);
-    form.reset();
-    setQuantity(1);
+  async function onSubmit(data: OrderFormValues) {
+    if (!user) {
+        toast({
+            title: "Error",
+            description: "You must be logged in to place an order.",
+            variant: "destructive",
+        });
+        return;
+    }
+    
+    // This is a placeholder userId. Replace with actual user ID from your auth system.
+    const userId = "ZVf0lpCwbbX8nK3N7Xubg1U21Ep1"; 
+    const userName = "Muse Mulugeta"; // Placeholder
+    const userEmail = "muoses.muller@gmail.com"; // Placeholder
+
+    const orderDate = format(data.deliveryDate, 'MMM dd, yyyy');
+    const orderTime = format(new Date(), 'HH:mm:ss a');
+    const orderId = `${orderDate}${orderTime.replace(/\s/g, '')}`;
+
+    const orderData = {
+        orderDate: orderDate,
+        orderDish: data.quantity.toString(),
+        orderId: orderId,
+        orderMenu: {
+            isActive: true,
+            menuCreatedDate: "Jun 04,2025", // This should be dynamic
+            menuCreatorUserId: "",
+            menuId: item.id,
+            menuImage: "", // You may want to add this
+            menuName: item.name,
+            menuPrice: item.price.toString(),
+            menuType: item.category,
+        },
+        orderPrice: (item.price * data.quantity).toString(),
+        orderProjectId: "",
+        orderProjectName: "",
+        orderRemark: "",
+        orderScheduleType: "forNow", // Or based on a form field
+        orderStatus: "sent",
+        orderTime: orderTime,
+        orderType: data.paymentMethod === 'project' ? 'Project' : 'Personal',
+        orderUserEmail: userEmail,
+        orderUserId: userId,
+        orderUserName: userName
+    };
+
+    try {
+        // Write to reception path
+        const receptionOrderRef = ref(database, `reception/${orderId}`);
+        await set(receptionOrderRef, orderData);
+
+        // Write to customer path
+        const customerOrderRef = ref(database, `customer/${userId}/${orderId}`);
+        await set(customerOrderRef, orderData);
+
+        toast({
+            title: "Order Submitted!",
+            description: `You've ordered ${data.quantity} plate(s) of ${item.name}.`,
+        });
+        onOpenChange(false);
+        form.reset();
+        setQuantity(1);
+
+    } catch (error) {
+        console.error("Firebase write failed:", error);
+        toast({
+            title: "Order Failed",
+            description: "Could not save your order. Please try again.",
+            variant: "destructive"
+        });
+    }
   }
 
   return (
