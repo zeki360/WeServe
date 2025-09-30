@@ -2,6 +2,18 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BedDouble, Wifi, Tv, Utensils, Wind, User, Star } from "lucide-react";
+import Image from "next/image";
+
+const overviewImages = [
+  { id: 1, title: "Cozy Single Room", hint: "hotel room" },
+  { id: 2, title: "Spacious Double Suite", hint: "luxury suite" },
+  { id: 3, title: "Modern Lobby", hint: "hotel lobby" },
+  { id: 4, title: "Relaxing Balcony View", hint: "balcony view" },
+  { id: 5, title: "Gourmet Breakfast", hint: "breakfast plate" },
+  { id: 6, title: "Fitness Center", hint: "gym equipment" },
+  { id: 7, title: "Outdoor Pool", hint: "swimming pool" },
+  { id: 8, title: "Lush Garden", hint: "garden path" },
+];
 
 export default function RoomsPage() {
   return (
@@ -25,16 +37,25 @@ export default function RoomsPage() {
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Welcome to Our Guesthouse</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>
-                Experience comfort and convenience at our modern guesthouse. Whether you're here for business or leisure, our rooms provide a peaceful retreat. Explore the tabs above to learn more about our amenities, pricing, and what our guests have to say.
-              </p>
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {overviewImages.map((image) => (
+              <Card key={image.id} className="overflow-hidden group">
+                 <div className="overflow-hidden rounded-t-lg">
+                  <Image
+                    src={`https://picsum.photos/seed/${image.id}/400/300`}
+                    width={400}
+                    height={300}
+                    alt={image.title}
+                    data-ai-hint={image.hint}
+                    className="w-full object-cover aspect-[4/3] transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <CardContent className="p-4">
+                  <h3 className="font-bold text-center">{image.title}</h3>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </TabsContent>
 
         <TabsContent value="info" className="mt-6">
