@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,12 +47,26 @@ type Order = {
 };
 
 type SortKey = 'orderUserName' | 'menuName' | 'dateTime' | 'orderType' | 'orderStatus';
+type Status = "all" | "sent" | "confirmed" | "completed" | "canceled";
 
 export default function ReceptionOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'ascending' | 'descending' } | null>({ key: 'dateTime', direction: 'descending' });
+  const [statusFilter, setStatusFilter] = useState<Status>('all');
+  
+  const statusCounts = useMemo(() => {
+    const counts = { all: 0, sent: 0, confirmed: 0, completed: 0, canceled: 0 };
+    orders.forEach(order => {
+        counts.all++;
+        if (order.orderStatus in counts) {
+            (counts as any)[order.orderStatus]++;
+        }
+    });
+    return counts;
+  }, [orders]);
+
 
   useEffect(() => {
     const ordersRef = ref(database, 'orders/reception');
@@ -72,8 +87,11 @@ export default function ReceptionOrdersPage() {
     return () => unsubscribe();
   }, []);
 
-  const sortedOrders = useMemo(() => {
-    let sortableItems = [...orders];
+  const filteredAndSortedOrders = useMemo(() => {
+    let sortableItems = statusFilter === 'all' 
+      ? [...orders] 
+      : orders.filter(order => order.orderStatus === statusFilter);
+
     if (sortConfig !== null) {
       sortableItems.sort((a, b) => {
         let aValue: any;
@@ -100,7 +118,7 @@ export default function ReceptionOrdersPage() {
       });
     }
     return sortableItems;
-  }, [orders, sortConfig]);
+  }, [orders, sortConfig, statusFilter]);
 
   const requestSort = (key: SortKey) => {
     let direction: 'ascending' | 'descending' = 'ascending';
@@ -176,7 +194,16 @@ export default function ReceptionOrdersPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {sortedOrders.length > 0 ? (
+          <Tabs value={statusFilter} onValueChange={(value) => setStatusFilter(value as Status)} className="mb-4">
+            <TabsList>
+              <TabsTrigger value="all">All ({statusCounts.all})</TabsTrigger>
+              <TabsTrigger value="sent">Sent ({statusCounts.sent})</TabsTrigger>
+              <TabsTrigger value="confirmed">Confirmed ({statusCounts.confirmed})</TabsTrigger>
+              <TabsTrigger value="completed">Completed ({statusCounts.completed})</TabsTrigger>
+              <TabsTrigger value="canceled">Canceled ({statusCounts.canceled})</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          {filteredAndSortedOrders.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -216,7 +243,7 @@ export default function ReceptionOrdersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedOrders.map((order) => (
+                {filteredAndSortedOrders.map((order) => (
                   <TableRow key={order.orderId}>
                     <TableCell className="font-medium">{order.orderUserName}</TableCell>
                     <TableCell>{order.orderMenu?.menuName || 'N/A'}</TableCell>
@@ -272,7 +299,7 @@ export default function ReceptionOrdersPage() {
             </Table>
           ) : (
             <div className="text-center py-10">
-              <p className="text-muted-foreground">No orders found.</p>
+              <p className="text-muted-foreground">No orders found for this status.</p>
             </div>
           )}
         </CardContent>
