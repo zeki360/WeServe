@@ -63,6 +63,21 @@ export default function OrdersPage() {
     return () => unsubscribe();
   }, [user]);
 
+  const getBadgeVariant = (status: string) => {
+    switch (status) {
+      case "sent":
+        return "secondary";
+      case "confirmed":
+        return "default";
+      case "completed":
+        return "outline";
+      case "canceled":
+        return "destructive";
+      default:
+        return "outline";
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -98,14 +113,7 @@ export default function OrdersPage() {
                     <TableCell>{order.orderDate} at {order.orderTime}</TableCell>
                     <TableCell>ETB {parseFloat(order.orderPrice).toFixed(2)}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant={
-                          order.orderStatus === "sent" ? "destructive"
-                          : order.orderStatus === "confirmed" ? "secondary"
-                          : order.orderStatus === "completed" ? "default"
-                          : "outline"
-                        }
-                      >
+                      <Badge variant={getBadgeVariant(order.orderStatus)}>
                         {order.orderStatus}
                       </Badge>
                     </TableCell>

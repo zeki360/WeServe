@@ -25,6 +25,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Loader, MoreHorizontal } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -89,6 +90,21 @@ export default function ReceptionOrdersPage() {
     }
   };
 
+  const getBadgeVariant = (status: string) => {
+    switch (status) {
+      case "sent":
+        return "secondary";
+      case "confirmed":
+        return "default";
+      case "completed":
+        return "outline";
+      case "canceled":
+        return "destructive";
+      default:
+        return "outline";
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -131,32 +147,44 @@ export default function ReceptionOrdersPage() {
                     <TableCell>{order.orderDate} at {order.orderTime}</TableCell>
                     <TableCell>{order.orderType}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant={
-                          order.orderStatus === "sent" ? "destructive"
-                          : order.orderStatus === "confirmed" ? "secondary"
-                          : order.orderStatus === "completed" ? "default"
-                          : "outline"
-                        }
-                      >
+                      <Badge variant={getBadgeVariant(order.orderStatus)}>
                         {order.orderStatus}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
+                          <Button 
+                            variant="ghost" 
+                            className="h-8 w-8 p-0"
+                            disabled={order.orderStatus === 'completed' || order.orderStatus === 'canceled'}
+                          >
                             <span className="sr-only">Open menu</span>
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleStatusUpdate(order, 'confirmed')}>
-                            Mark as Confirmed
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleStatusUpdate(order, 'completed')}>
-                            Mark as Completed
-                          </DropdownMenuItem>
+                           {order.orderStatus === 'sent' && (
+                            <DropdownMenuItem onClick={() => handleStatusUpdate(order, 'confirmed')}>
+                              Mark as Confirmed
+                            </DropdownMenuItem>
+                          )}
+                          {order.orderStatus === 'confirmed' && (
+                            <DropdownMenuItem onClick={() => handleStatusUpdate(order, 'completed')}>
+                              Mark as Completed
+                            </DropdownMenuItem>
+                          )}
+                          {(order.orderStatus === 'sent' || order.orderStatus === 'confirmed') && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="text-destructive"
+                                onClick={() => handleStatusUpdate(order, 'canceled')}
+                              >
+                                Cancel Order
+                              </DropdownMenuItem>
+                            </>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
