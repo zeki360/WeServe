@@ -1,8 +1,11 @@
+"use client"
 
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BedDouble, Wifi, Tv, Utensils, Wind, User, Star } from "lucide-react";
 import Image from "next/image";
+import { RoomBookingDialog } from "@/components/RoomBookingDialog";
 
 const overviewImages = [
   { id: 1, title: "Cozy Single Room", hint: "hotel room" },
@@ -15,7 +18,23 @@ const overviewImages = [
   { id: 8, title: "Lush Garden", hint: "garden path" },
 ];
 
+export interface RoomInfo {
+  id: number;
+  title: string;
+  hint: string;
+}
+
 export default function RoomsPage() {
+  const [selectedRoom, setSelectedRoom] = useState<RoomInfo | null>(null);
+
+  const handleRoomClick = (room: RoomInfo) => {
+    setSelectedRoom(room);
+  };
+
+  const handleDialogClose = () => {
+    setSelectedRoom(null);
+  }
+
   return (
     <div className="p-4 md:p-6">
       <header className="mb-6">
@@ -39,7 +58,11 @@ export default function RoomsPage() {
         <TabsContent value="overview" className="mt-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {overviewImages.map((image) => (
-              <Card key={image.id} className="overflow-hidden group">
+              <Card 
+                key={image.id} 
+                className="overflow-hidden group cursor-pointer"
+                onClick={() => handleRoomClick(image)}
+              >
                  <div className="overflow-hidden rounded-t-lg">
                   <Image
                     src={`https://picsum.photos/seed/${image.id}/400/300`}
@@ -158,6 +181,13 @@ export default function RoomsPage() {
           </Card>
         </TabsContent>
       </Tabs>
+      {selectedRoom && (
+        <RoomBookingDialog 
+          room={selectedRoom} 
+          open={!!selectedRoom} 
+          onOpenChange={handleDialogClose} 
+        />
+      )}
     </div>
   );
 }
