@@ -1,6 +1,6 @@
 
 "use client"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { database } from "@/lib/firebase";
 import { ref, onValue, set } from "firebase/database";
 import {
@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Loader, MoreHorizontal } from "lucide-react";
+import { Loader, MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 type Order = {
@@ -45,10 +45,13 @@ type Order = {
   orderUserId: string;
 };
 
+type SortKey = 'orderUserName' | 'menuName' | 'dateTime' | 'orderType' | 'orderStatus';
+
 export default function ReceptionOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'ascending' | 'descending' } | null>({ key: 'dateTime', direction: 'descending' });
 
   useEffect(() => {
     const ordersRef = ref(database, 'orders/reception');
@@ -56,7 +59,7 @@ export default function ReceptionOrdersPage() {
       const data = snapshot.val();
       if (data) {
         const allOrders = Object.values(data) as Order[];
-        setOrders(allOrders.sort((a,b) => new Date(b.orderDate + " " + b.orderTime).getTime() - new Date(a.orderDate + " " + a.orderTime).getTime()));
+        setOrders(allOrders);
       } else {
         setOrders([]);
       }
@@ -68,6 +71,44 @@ export default function ReceptionOrdersPage() {
 
     return () => unsubscribe();
   }, []);
+
+  const sortedOrders = useMemo(() => {
+    let sortableItems = [...orders];
+    if (sortConfig !== null) {
+      sortableItems.sort((a, b) => {
+        let aValue: any;
+        let bValue: any;
+
+        if (sortConfig.key === 'menuName') {
+          aValue = a.orderMenu?.menuName || '';
+          bValue = b.orderMenu?.menuName || '';
+        } else if (sortConfig.key === 'dateTime') {
+          aValue = new Date(`${a.orderDate} ${a.orderTime}`).getTime();
+          bValue = new Date(`${b.orderDate} ${b.orderTime}`).getTime();
+        } else {
+          aValue = a[sortConfig.key as keyof Order];
+          bValue = b[sortConfig.key as keyof Order];
+        }
+
+        if (aValue < bValue) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [orders, sortConfig]);
+
+  const requestSort = (key: SortKey) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
 
   const handleStatusUpdate = async (order: Order, newStatus: string) => {
     const receptionOrderRef = ref(database, `orders/reception/${order.orderId}/orderStatus`);
@@ -104,6 +145,18 @@ export default function ReceptionOrdersPage() {
         return "outline";
     }
   };
+  
+  const getSortIndicator = (key: SortKey) => {
+    if (!sortConfig || sortConfig.key !== key) {
+      return <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />;
+    }
+    return sortConfig.direction === 'ascending' ? (
+      <ArrowUpDown className="ml-2 h-4 w-4" /> // Replace with ArrowUp icon if you prefer
+    ) : (
+      <ArrowUpDown className="ml-2 h-4 w-4" /> // Replace with ArrowDown icon
+    );
+  };
+
 
   if (loading) {
     return (
@@ -123,22 +176,47 @@ export default function ReceptionOrdersPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {orders.length > 0 ? (
+          {sortedOrders.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Item</TableHead>
+                  <TableHead>
+                    <Button variant="ghost" onClick={() => requestSort('orderUserName')}>
+                      Customer
+                      {getSortIndicator('orderUserName')}
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                     <Button variant="ghost" onClick={() => requestSort('menuName')}>
+                      Item
+                      {getSortIndicator('menuName')}
+                    </Button>
+                  </TableHead>
                   <TableHead>Qty</TableHead>
                   <TableHead>Total Price</TableHead>
-                  <TableHead>Time</TableHead>
-                  <TableHead>Payment</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>
+                     <Button variant="ghost" onClick={() => requestSort('dateTime')}>
+                      Time
+                      {getSortIndicator('dateTime')}
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button variant="ghost" onClick={() => requestSort('orderType')}>
+                      Payment
+                      {getSortIndicator('orderType')}
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button variant="ghost" onClick={() => requestSort('orderStatus')}>
+                      Status
+                      {getSortIndicator('orderStatus')}
+                    </Button>
+                  </TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {orders.map((order) => (
+                {sortedOrders.map((order) => (
                   <TableRow key={order.orderId}>
                     <TableCell className="font-medium">{order.orderUserName}</TableCell>
                     <TableCell>{order.orderMenu?.menuName || 'N/A'}</TableCell>
