@@ -24,7 +24,7 @@ import { useAuth } from "@/context/AuthContext";
 
 type Order = {
   orderId: string;
-  orderMenu: {
+  orderMenu?: {
     menuName: string;
   };
   orderDate: string;
@@ -94,7 +94,7 @@ export default function OrdersPage() {
               <TableBody>
                 {orders.map((order) => (
                   <TableRow key={order.orderId}>
-                    <TableCell className="font-medium">{order.orderMenu.menuName}</TableCell>
+                    <TableCell className="font-medium">{order.orderMenu?.menuName || 'N/A'}</TableCell>
                     <TableCell>{order.orderDate} at {order.orderTime}</TableCell>
                     <TableCell>ETB {parseFloat(order.orderPrice).toFixed(2)}</TableCell>
                     <TableCell>
