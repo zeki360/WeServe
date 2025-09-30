@@ -36,7 +36,7 @@ export default function ReceptionOrdersPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const ordersRef = ref(database, 'reception');
+    const ordersRef = ref(database, 'orders/reception');
     const unsubscribe = onValue(ordersRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {

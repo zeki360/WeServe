@@ -126,11 +126,11 @@ export function FoodOrderDialog({ item, open, onOpenChange }: FoodOrderDialogPro
 
     try {
         // Write to reception path
-        const receptionOrderRef = ref(database, `reception/${orderId}`);
+        const receptionOrderRef = ref(database, `orders/reception/${orderId}`);
         await set(receptionOrderRef, orderData);
 
         // Write to customer path
-        const customerOrderRef = ref(database, `customer/${userId}/${orderId}`);
+        const customerOrderRef = ref(database, `orders/customer/${userId}/${orderId}`);
         await set(customerOrderRef, orderData);
 
         toast({

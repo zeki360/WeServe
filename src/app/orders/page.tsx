@@ -44,7 +44,7 @@ export default function OrdersPage() {
     // This is a placeholder userId. In a real app, you'd get this from your auth context.
     const userId = "ZVf0lpCwbbX8nK3N7Xubg1U21Ep1";
     
-    const ordersRef = ref(database, `customer/${userId}`);
+    const ordersRef = ref(database, `orders/customer/${userId}`);
     
     const unsubscribe = onValue(ordersRef, (snapshot) => {
       const data = snapshot.val();
