@@ -100,7 +100,10 @@ export default function OrdersPage() {
                     <TableCell>
                       <Badge
                         variant={
-                          order.orderStatus === "sent" ? "secondary" : "default"
+                          order.orderStatus === "sent" ? "destructive"
+                          : order.orderStatus === "confirmed" ? "secondary"
+                          : order.orderStatus === "completed" ? "default"
+                          : "outline"
                         }
                       >
                         {order.orderStatus}
