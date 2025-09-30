@@ -2,7 +2,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import { database } from "@/lib/firebase";
-import { ref, onValue } from "firebase/database";
+import { ref, onValue, set } from "firebase/database";
 import {
   Card,
   CardContent,
@@ -19,7 +19,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Loader } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Loader, MoreHorizontal } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 type Order = {
   orderId: string;
@@ -27,13 +35,19 @@ type Order = {
   orderMenu?: {
     menuName: string;
   };
+  orderDate: string;
   orderTime: string;
   orderStatus: string;
+  orderDish: string; // Quantity
+  orderPrice: string; // Total Price
+  orderType: string; // Payment method ('Personal' or 'Project')
+  orderUserId: string;
 };
 
 export default function ReceptionOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     const ordersRef = ref(database, 'orders/reception');
@@ -41,7 +55,7 @@ export default function ReceptionOrdersPage() {
       const data = snapshot.val();
       if (data) {
         const allOrders = Object.values(data) as Order[];
-        setOrders(allOrders);
+        setOrders(allOrders.sort((a,b) => new Date(b.orderDate + " " + b.orderTime).getTime() - new Date(a.orderDate + " " + a.orderTime).getTime()));
       } else {
         setOrders([]);
       }
@@ -53,6 +67,27 @@ export default function ReceptionOrdersPage() {
 
     return () => unsubscribe();
   }, []);
+
+  const handleStatusUpdate = async (order: Order, newStatus: string) => {
+    const receptionOrderRef = ref(database, `orders/reception/${order.orderId}/orderStatus`);
+    const customerOrderRef = ref(database, `orders/customer/${order.orderUserId}/${order.orderId}/orderStatus`);
+    
+    try {
+      await set(receptionOrderRef, newStatus);
+      await set(customerOrderRef, newStatus);
+      toast({
+        title: "Status Updated",
+        description: `Order ${order.orderId} is now ${newStatus}.`
+      })
+    } catch(error) {
+      console.error("Failed to update status: ", error);
+      toast({
+        title: "Update Failed",
+        description: "Could not update the order status.",
+        variant: "destructive",
+      })
+    }
+  };
 
   if (loading) {
     return (
@@ -72,38 +107,68 @@ export default function ReceptionOrdersPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Customer</TableHead>
-                <TableHead>Item</TableHead>
-                <TableHead>Time</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order.orderId}>
-                  <TableCell className="font-medium">{order.orderUserName}</TableCell>
-                  <TableCell>{order.orderMenu?.menuName || 'N/A'}</TableCell>
-                  <TableCell>{order.orderTime}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        order.orderStatus === "sent"
-                          ? "destructive"
-                          : order.orderStatus === "confirmed"
-                          ? "secondary"
-                          : "default"
-                      }
-                    >
-                      {order.orderStatus}
-                    </Badge>
-                  </TableCell>
+          {orders.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Customer</TableHead>
+                  <TableHead>Item</TableHead>
+                  <TableHead>Qty</TableHead>
+                  <TableHead>Total Price</TableHead>
+                  <TableHead>Time</TableHead>
+                  <TableHead>Payment</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {orders.map((order) => (
+                  <TableRow key={order.orderId}>
+                    <TableCell className="font-medium">{order.orderUserName}</TableCell>
+                    <TableCell>{order.orderMenu?.menuName || 'N/A'}</TableCell>
+                    <TableCell>{order.orderDish}</TableCell>
+                    <TableCell>ETB {parseFloat(order.orderPrice).toFixed(2)}</TableCell>
+                    <TableCell>{order.orderDate} at {order.orderTime}</TableCell>
+                    <TableCell>{order.orderType}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          order.orderStatus === "sent" ? "destructive"
+                          : order.orderStatus === "confirmed" ? "secondary"
+                          : order.orderStatus === "completed" ? "default"
+                          : "outline"
+                        }
+                      >
+                        {order.orderStatus}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleStatusUpdate(order, 'confirmed')}>
+                            Mark as Confirmed
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleStatusUpdate(order, 'completed')}>
+                            Mark as Completed
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-muted-foreground">No orders found.</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
