@@ -33,7 +33,7 @@ export default function FoodCard({ item }: FoodCardProps) {
       <CardContent className="p-4 space-y-2">
         <h3 className="text-lg font-bold font-headline leading-none tracking-tight truncate">{item.name}</h3>
         <div className="flex justify-between items-center">
-          <p className="text-xl font-bold text-primary">${item.price.toFixed(2)}</p>
+          <p className="text-xl font-bold text-primary">ETB {item.price.toFixed(2)}</p>
           <Rating value={item.rating} />
         </div>
       </CardContent>

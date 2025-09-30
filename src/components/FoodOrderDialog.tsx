@@ -176,7 +176,7 @@ export function FoodOrderDialog({ item, open, onOpenChange }: FoodOrderDialogPro
               <div className="flex flex-col w-full">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-muted-foreground">Total Price:</span>
-                  <span className="text-2xl font-bold text-primary">${(item.price * quantity).toFixed(2)}</span>
+                  <span className="text-2xl font-bold text-primary">ETB {(item.price * quantity).toFixed(2)}</span>
                 </div>
                 <Button type="submit" className="w-full">
                   Place Order
