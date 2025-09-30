@@ -7,12 +7,14 @@ import FoodCard from "@/components/FoodCard"
 import { Search, Loader } from "lucide-react"
 import { database } from "@/lib/firebase";
 import { ref, onValue } from "firebase/database";
+import { FoodOrderDialog } from "@/components/FoodOrderDialog";
 
 const categories: FoodItem['category'][] = ['Breakfast', 'Main Dish', 'Drinks', 'Dessert'];
 
 export default function MenuPage() {
   const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
 
   useEffect(() => {
     const menuRef = ref(database, 'menu');
@@ -51,6 +53,14 @@ export default function MenuPage() {
     return () => unsubscribe();
   }, []);
 
+  const handleFoodItemClick = (item: FoodItem) => {
+    setSelectedItem(item);
+  };
+
+  const handleDialogClose = () => {
+    setSelectedItem(null);
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -86,12 +96,23 @@ export default function MenuPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {foodItems
                 .filter(item => item.category === category)
-                .map(item => <FoodCard key={item.id} item={item} />)
+                .map(item => (
+                  <div key={item.id} onClick={() => handleFoodItemClick(item)} className="cursor-pointer">
+                    <FoodCard item={item} />
+                  </div>
+                ))
               }
             </div>
           </TabsContent>
         ))}
       </Tabs>
+      {selectedItem && (
+        <FoodOrderDialog 
+          item={selectedItem} 
+          open={!!selectedItem} 
+          onOpenChange={handleDialogClose} 
+        />
+      )}
     </div>
   )
 }

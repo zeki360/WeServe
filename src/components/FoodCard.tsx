@@ -13,7 +13,7 @@ type FoodCardProps = {
 
 export default function FoodCard({ item }: FoodCardProps) {
   return (
-    <Card className="overflow-hidden group border-2 border-transparent hover:border-primary hover:shadow-lg transition-all duration-300 ease-in-out">
+    <Card className="overflow-hidden group border-2 border-transparent hover:border-primary hover:shadow-lg transition-all duration-300 ease-in-out h-full">
       <div className="overflow-hidden">
         <Image
           src={item.image}
@@ -23,7 +23,10 @@ export default function FoodCard({ item }: FoodCardProps) {
           className="w-full object-cover aspect-[4/3] transition-transform duration-300 group-hover:scale-105"
           data-ai-hint={item.dataAiHint}
           onError={(e) => {
-            e.currentTarget.src = `https://picsum.photos/400/300?random=${item.id}`
+            // Log the problematic path to the console to help with debugging
+            console.error(`Failed to load image for '${item.name}'. Tried to load: ${item.image}`);
+            // Fallback to placeholder if the local image fails to load
+            e.currentTarget.src = `https://picsum.photos/400/300?random=${item.id}`;
           }}
         />
       </div>
