@@ -14,12 +14,18 @@ import {
 import { useAuth } from "@/context/AuthContext"
 
 const allNavItems = [
+  // Customer-facing links
   { href: "/", label: "Menu", icon: Utensils, roles: ['customer'] },
-  { href: "/rooms", label: "Rooms", icon: BedDouble, roles: ['customer', 'receptionist'] },
-  { href: "/reservation", label: "Reservation", icon: CalendarCheck, roles: ['customer', 'receptionist'] },
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ['receptionist'] },
-  { href: "/orders", label: "Orders", icon: ClipboardList, roles: ['customer', 'receptionist'] },
+  { href: "/rooms", label: "Book Room", icon: BedDouble, roles: ['customer'] },
+  { href: "/reservation", label: "Reserve Space", icon: CalendarCheck, roles: ['customer'] },
+  { href: "/orders", label: "My Orders", icon: ClipboardList, roles: ['customer'] },
   { href: "/profile", label: "Profile", icon: User, roles: ['customer'] },
+
+  // Reception-facing links
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ['receptionist'] },
+  { href: "/reception/orders", label: "Manage Orders", icon: ClipboardList, roles: ['receptionist'] },
+  { href: "/reception/rooms", label: "Manage Rooms", icon: BedDouble, roles: ['receptionist'] },
+  { href: "/reception/reservations", label: "Manage Reservations", icon: CalendarCheck, roles: ['receptionist'] },
 ];
 
 export default function Navigation() {
