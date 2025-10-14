@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react";
@@ -8,14 +9,14 @@ import Image from "next/image";
 import { RoomBookingDialog } from "@/components/RoomBookingDialog";
 
 const overviewImages = [
-  { id: 1, title: "Cozy Single Room", hint: "hotel room" },
-  { id: 2, title: "Spacious Double Suite", hint: "luxury suite" },
-  { id: 3, title: "Modern Lobby", hint: "hotel lobby" },
-  { id: 4, title: "Relaxing Balcony View", hint: "balcony view" },
-  { id: 5, title: "Gourmet Breakfast", hint: "breakfast plate" },
-  { id: 6, title: "Fitness Center", hint: "gym equipment" },
-  { id: 7, title: "Outdoor Pool", hint: "swimming pool" },
-  { id: 8, title: "Lush Garden", hint: "garden path" },
+  { id: 1, title: "Standard Room 1", hint: "hotel room" },
+  { id: 2, title: "Standard Room 2", hint: "hotel room" },
+  { id: 3, title: "Standard Room 3", hint: "hotel room" },
+  { id: 4, title: "Standard Room 4", hint: "hotel room" },
+  { id: 5, title: "Standard Room 5", hint: "hotel room" },
+  { id: 6, title: "Standard Room 6", hint: "hotel room" },
+  { id: 7, title: "Deluxe Room 1", hint: "luxury hotel room" },
+  { id: 8, title: "Deluxe Room 2", hint: "luxury suite" },
 ];
 
 export interface RoomInfo {
@@ -90,12 +91,12 @@ export default function RoomsPage() {
               <div>
                 <h3 className="font-bold">Standard Room</h3>
                 <p>ETB 1,500.00 / night</p>
-                <p className="text-muted-foreground">A cozy room perfect for solo travelers or couples. Features a queen-sized bed.</p>
+                <p className="text-muted-foreground">A cozy room perfect for solo travelers or couples. Features a king-size bed.</p>
               </div>
               <div>
-                <h3 className="font-bold">Deluxe Suite</h3>
+                <h3 className="font-bold">Deluxe Room</h3>
                 <p>ETB 2,500.00 / night</p>
-                <p className="text-muted-foreground">A spacious suite with a separate living area, perfect for families or extended stays.</p>
+                <p className="text-muted-foreground">A spacious room with a separate living area and a king-size bed, perfect for families or extended stays.</p>
               </div>
             </CardContent>
           </Card>
