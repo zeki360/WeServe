@@ -9,14 +9,14 @@ import Image from "next/image";
 import { RoomBookingDialog } from "@/components/RoomBookingDialog";
 
 const overviewImages = [
-  { id: 1, title: "Standard Room 1", hint: "hotel room" },
-  { id: 2, title: "Standard Room 2", hint: "hotel room" },
-  { id: 3, title: "Standard Room 3", hint: "hotel room" },
-  { id: 4, title: "Standard Room 4", hint: "hotel room" },
-  { id: 5, title: "Standard Room 5", hint: "hotel room" },
-  { id: 6, title: "Standard Room 6", hint: "hotel room" },
-  { id: 7, title: "Deluxe Room 1", hint: "luxury hotel room" },
-  { id: 8, title: "Deluxe Room 2", hint: "luxury suite" },
+  { id: 1, title: "Standard Room 1", hint: "hotel room", src: "https://i.ibb.co/mdfx11t/IMG-1635.jpg" },
+  { id: 2, title: "Standard Room 2", hint: "hotel room", src: "https://i.ibb.co/mdfx11t/IMG-1635.jpg" },
+  { id: 3, title: "Standard Room 3", hint: "hotel room", src: "https://i.ibb.co/mdfx11t/IMG-1635.jpg" },
+  { id: 4, title: "Standard Room 4", hint: "hotel room", src: "https://i.ibb.co/mdfx11t/IMG-1635.jpg" },
+  { id: 5, title: "Standard Room 5", hint: "hotel room", src: "https://i.ibb.co/mdfx11t/IMG-1635.jpg" },
+  { id: 6, title: "Standard Room 6", hint: "hotel room", src: "https://i.ibb.co/mdfx11t/IMG-1635.jpg" },
+  { id: 7, title: "Deluxe Room 1", hint: "luxury hotel room", src: `https://picsum.photos/seed/7/400/300` },
+  { id: 8, title: "Deluxe Room 2", hint: "luxury suite", src: `https://picsum.photos/seed/8/400/300` },
 ];
 
 export interface RoomInfo {
@@ -57,7 +57,7 @@ export default function RoomsPage() {
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {overviewImages.map((image) => (
               <Card 
                 key={image.id} 
@@ -66,7 +66,7 @@ export default function RoomsPage() {
               >
                  <div className="overflow-hidden rounded-t-lg">
                   <Image
-                    src={`https://picsum.photos/seed/${image.id}/400/300`}
+                    src={image.src}
                     width={400}
                     height={300}
                     alt={image.title}
