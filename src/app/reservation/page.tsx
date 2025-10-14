@@ -7,11 +7,11 @@ const reservationOptions = [
     title: "Main Hall",
     description: "Perfect for large events, conferences, and weddings. Accommodates up to 200 guests.",
     image: {
-      src: "https://picsum.photos/seed/wedding-hall/600/400",
+      src: "https://i.ibb.co/6R73dqRx/IMG-1662.jpg",
       width: 600,
       height: 400,
-      alt: "A large, elegant hall set up for a wedding.",
-      "data-ai-hint": "banquet hall"
+      alt: "An elegant event hall with round tables and decorations.",
+      "data-ai-hint": "event hall"
     }
   },
   {
