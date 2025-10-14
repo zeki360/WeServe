@@ -1,10 +1,13 @@
+
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, Shield } from "lucide-react";
+import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -48,6 +51,17 @@ export default function LoginPage() {
             </Button>
           </div>
         </CardContent>
+        <CardFooter className="flex flex-col items-center gap-4">
+            <Separator />
+            <div className="text-center">
+                <p className="text-sm text-muted-foreground">
+                    Don't have an account?{' '}
+                    <Link href="/register" className="text-primary hover:underline">
+                        Sign up
+                    </Link>
+                </p>
+            </div>
+        </CardFooter>
       </Card>
     </div>
   );
