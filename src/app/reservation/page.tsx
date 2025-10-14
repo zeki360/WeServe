@@ -18,7 +18,7 @@ const reservationOptions = [
     title: "Meeting Hall",
     description: "Ideal for corporate meetings, workshops, and presentations. Equipped with modern AV technology.",
     image: {
-      src: "https://picsum.photos/seed/boardroom/600/400",
+      src: "https://i.ibb.co/5WQPf5BK/IMG-1683.jpg",
       width: 600,
       height: 400,
       alt: "A modern meeting room with a large screen and a long table.",
