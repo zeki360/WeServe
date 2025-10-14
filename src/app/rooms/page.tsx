@@ -15,8 +15,8 @@ const overviewImages = [
   { id: 4, title: "Standard Room 4", hint: "hotel room", src: "https://i.ibb.co/mdfx11t/IMG-1635.jpg" },
   { id: 5, title: "Standard Room 5", hint: "hotel room", src: "https://i.ibb.co/mdfx11t/IMG-1635.jpg" },
   { id: 6, title: "Standard Room 6", hint: "hotel room", src: "https://i.ibb.co/mdfx11t/IMG-1635.jpg" },
-  { id: 7, title: "Deluxe Room 1", hint: "luxury hotel room", src: `https://picsum.photos/seed/7/400/300` },
-  { id: 8, title: "Deluxe Room 2", hint: "luxury suite", src: `https://picsum.photos/seed/8/400/300` },
+  { id: 7, title: "Deluxe Room 1", hint: "luxury hotel room", src: "https://i.ibb.co/gLv0cj0S/IMG-1618.jpg" },
+  { id: 8, title: "Deluxe Room 2", hint: "luxury suite", src: "https://i.ibb.co/gLv0cj0S/IMG-1618.jpg" },
 ];
 
 export interface RoomInfo {
