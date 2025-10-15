@@ -83,7 +83,7 @@ export default function ReservationPage() {
               <p className={cn("flex-grow", option.title === "Main Hall" ? "text-white/90" : "text-muted-foreground")}>{option.description}</p>
               <Button 
                 className="mt-4 w-full"
-                variant={option.title === "Main Hall" ? "secondary" : "default"}
+                variant={"default"}
               >
                 Book Now
               </Button>
