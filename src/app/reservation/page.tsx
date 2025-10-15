@@ -63,7 +63,7 @@ export default function ReservationPage() {
             key={option.title} 
             className={cn(
               "overflow-hidden group border-2 border-transparent hover:border-primary hover:shadow-lg transition-all duration-300 ease-in-out",
-              option.title === "Main Hall" && "bg-[#007965] text-white"
+              "bg-[#007965] text-white"
             )}
           >
             <div className="overflow-hidden">
@@ -80,7 +80,7 @@ export default function ReservationPage() {
               <CardTitle className="text-2xl font-bold font-headline">{option.title}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col flex-grow">
-              <p className={cn("flex-grow", option.title === "Main Hall" ? "text-white/90" : "text-muted-foreground")}>{option.description}</p>
+              <p className={cn("flex-grow", "text-white/90")}>{option.description}</p>
               <Button 
                 className="mt-4 w-full"
                 variant={"default"}
