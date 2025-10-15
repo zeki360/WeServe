@@ -22,7 +22,7 @@ export default function RootLayout({
           <div className={cn("font-body antialiased", "min-h-screen bg-background")}>
             <div className="relative md:flex">
               <Navigation />
-              <main className="flex-1 pb-20 md:pb-0">
+              <main className="flex-1 pb-20 md:pb-0 md:h-screen md:overflow-y-auto">
                 {children}
               </main>
             </div>
