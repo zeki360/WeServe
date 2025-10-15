@@ -1,3 +1,4 @@
+
 "use client"
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input"
@@ -71,13 +72,19 @@ export default function MenuPage() {
 
   return (
     <div className="p-4 md:p-6">
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold font-headline tracking-tight text-foreground">
-          Our Menu
-        </h1>
-        <p className="text-muted-foreground mt-2">
-          Deliciously crafted meals, just for you.
-        </p>
+      <header 
+        className="relative rounded-lg overflow-hidden mb-6 bg-cover bg-center"
+        style={{ backgroundImage: "url('https://i.ibb.co/DfbV8Jx8/IMG-1672.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative p-12 text-center text-white">
+          <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">
+            Our Menu
+          </h1>
+          <p className="text-lg md:text-xl mt-2 text-white/90">
+            Deliciously crafted meals, just for you.
+          </p>
+        </div>
       </header>
       
       <div className="relative mb-6 max-w-md">
