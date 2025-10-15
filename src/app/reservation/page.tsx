@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -41,13 +42,19 @@ const reservationOptions = [
 export default function ReservationPage() {
   return (
     <div className="p-4 md:p-6">
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold font-headline tracking-tight text-foreground">
-          Book a Space
-        </h1>
-        <p className="text-muted-foreground mt-2">
-          Reserve one of our versatile spaces for your next event.
-        </p>
+      <header 
+        className="relative rounded-lg overflow-hidden mb-6 bg-cover bg-center"
+        style={{ backgroundImage: "url('https://i.ibb.co/GfvnRXmK/IMG-1664.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative p-12 text-center text-white">
+          <h1 className="text-4xl md:text-5xl font-bold font-headline tracking-tight">
+            Book a Space
+          </h1>
+          <p className="text-lg md:text-xl mt-2 text-white/90">
+            Reserve one of our versatile spaces for your next event.
+          </p>
+        </div>
       </header>
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {reservationOptions.map((option) => (
