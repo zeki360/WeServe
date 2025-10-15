@@ -31,11 +31,11 @@ const reservationOptions = [
     title: "Training Center",
     description: "A flexible space designed for training sessions and educational seminars.",
     image: {
-      src: "https://picsum.photos/seed/seminar-room/600/400",
+      src: "https://i.ibb.co/GfvnRXmK/IMG-1664.jpg",
       width: 600,
       height: 400,
-      alt: "A classroom-style setup for a training session.",
-      "data-ai-hint": "training classroom"
+      alt: "A large, modern training center with many seats.",
+      "data-ai-hint": "training center"
     }
   }
 ];
