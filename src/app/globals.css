@@ -31,7 +31,7 @@
     --chart-5: 27 87% 67%;
     
     --sidebar-background: 39 99% 51%;
-    --sidebar-foreground: 20 10% 10%;
+    --sidebar-foreground: 0 0% 100%;
   }
   .dark {
     --background: 20 10% 10%;
@@ -60,7 +60,7 @@
     --chart-5: 340 75% 55%;
     
     --sidebar-background: 39 99% 51%;
-    --sidebar-foreground: 20 10% 10%;
+    --sidebar-foreground: 0 0% 100%;
   }
 }
 
