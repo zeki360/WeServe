@@ -2,6 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 const reservationOptions = [
   {
@@ -58,7 +59,13 @@ export default function ReservationPage() {
       </header>
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {reservationOptions.map((option) => (
-          <Card key={option.title} className="overflow-hidden group border-2 border-transparent hover:border-primary hover:shadow-lg transition-all duration-300 ease-in-out">
+          <Card 
+            key={option.title} 
+            className={cn(
+              "overflow-hidden group border-2 border-transparent hover:border-primary hover:shadow-lg transition-all duration-300 ease-in-out",
+              option.title === "Main Hall" && "bg-[#007965] text-white"
+            )}
+          >
             <div className="overflow-hidden">
               <Image
                 src={option.image.src}
@@ -73,8 +80,11 @@ export default function ReservationPage() {
               <CardTitle className="text-2xl font-bold font-headline">{option.title}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col flex-grow">
-              <p className="text-muted-foreground flex-grow">{option.description}</p>
-              <Button className="mt-4 w-full">
+              <p className={cn("flex-grow", option.title === "Main Hall" ? "text-white/90" : "text-muted-foreground")}>{option.description}</p>
+              <Button 
+                className="mt-4 w-full"
+                variant={option.title === "Main Hall" ? "secondary" : "default"}
+              >
                 Book Now
               </Button>
             </CardContent>
