@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!loading && !user && pathname !== '/login') {
+    if (!loading && !user && pathname !== '/login' && pathname !== '/register') {
       router.push('/login');
     }
   }, [user, loading, pathname, router]);
@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = { user, login, logout, loading };
 
-  if (loading && pathname !== '/login') {
+  if (loading && !['/login', '/register'].includes(pathname)) {
       return (
         <div className="flex justify-center items-center h-screen">
           <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div>
@@ -65,8 +65,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       );
   }
   
-  // Do not wrap login page in layout with nav
-  if(pathname === '/login') {
+  // Do not wrap login/register pages in layout with nav
+  if(['/login', '/register'].includes(pathname)) {
     return (
         <AuthContext.Provider value={value}>
             {children}

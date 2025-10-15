@@ -34,7 +34,7 @@ export default function Navigation() {
   const { user, logout } = useAuth();
 
   if (!user) {
-    if (pathname !== '/login') {
+    if (pathname !== '/login' && pathname !== '/register') {
        // On the server, this might not immediately redirect, but will on client hydration
        if (typeof window !== 'undefined') {
         router.push('/login');
@@ -51,12 +51,12 @@ export default function Navigation() {
   const navItems = allNavItems.filter(item => item.roles.includes(user.role));
 
   return (
-    <aside className="fixed bottom-0 left-0 z-10 w-full border-t bg-background/95 backdrop-blur-sm md:relative md:h-screen md:w-20 md:border-r md:border-t-0 md:bg-background md:backdrop-blur-none">
+    <aside className="fixed bottom-0 left-0 z-10 w-full border-t bg-sidebar/95 text-sidebar-foreground backdrop-blur-sm md:relative md:h-screen md:w-20 md:border-r md:border-t-0 md:bg-sidebar md:backdrop-blur-none">
       <TooltipProvider delayDuration={0}>
         <nav className="flex h-full flex-row items-center justify-around md:flex-col md:justify-start">
           <Link
             href={user.role === 'customer' ? '/' : '/dashboard'}
-            className="hidden h-20 w-full items-center justify-center font-bold text-2xl text-primary md:flex"
+            className="hidden h-20 w-full items-center justify-center font-bold text-2xl text-sidebar-foreground md:flex"
             aria-label="WeServe Home"
           >
             WS
@@ -71,8 +71,8 @@ export default function Navigation() {
                     <Link
                       href={item.href}
                       className={cn(
-                        "flex h-16 w-16 flex-col items-center justify-center gap-1 rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
-                        isActive && "bg-primary/10 text-primary"
+                        "flex h-16 w-16 flex-col items-center justify-center gap-1 rounded-lg text-sidebar-foreground/80 transition-colors hover:bg-black/10 hover:text-sidebar-foreground",
+                        isActive && "bg-black/20 text-sidebar-foreground"
                       )}
                     >
                       <item.icon className="h-6 w-6" />
@@ -93,7 +93,7 @@ export default function Navigation() {
                 <TooltipTrigger asChild>
                   <button
                     onClick={handleLogout}
-                    className="flex h-16 w-16 flex-col items-center justify-center gap-1 rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                    className="flex h-16 w-16 flex-col items-center justify-center gap-1 rounded-lg text-sidebar-foreground/80 transition-colors hover:bg-black/10 hover:text-sidebar-foreground"
                   >
                     <LogOut className="h-6 w-6" />
                     <span className="sr-only">Logout</span>
